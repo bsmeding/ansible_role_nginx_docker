@@ -1,0 +1,35 @@
+---
+# Tasks to configure Nginx (site and proxy configs)
+
+# Proxy confs must end in subdomain.conf to auto load
+- name: Generate proxy confs from nginx__proxy_confs_subdomain variable
+  ansible.builtin.template:
+    src: nginx_default_site_template.j2
+    dest: "{{ nginx__home }}/config/nginx/site-confs/{{ item.server_name }}.conf"
+    owner: "{{ item.owner | default(docker_uid) | default('root') }}" # First docker user (if docker role has run), otherwise default role, otherwise root
+    group: "{{ item.group | default(docker_gid) | default('root') }}"
+  loop: "{{ nginx__proxy_confs_subdomain }}"
+  notify: restart nginx     
+  when: nginx__proxy_confs_subdomain is defined and nginx__proxy_confs_subdomain|length>0
+
+- name: "Copy local site-confs if exists in {{ playbook_dir }}/files/nginx/site-confs/"
+  ansible.builtin.copy:
+    src: "{{ playbook_dir }}/files/nginx/site-confs/"
+    dest: "{{ nginx__home }}/config/nginx/site-confs"
+    owner: "{{ docker_uid }}"
+    group: "{{ docker_gid }}"
+    mode: '0640'
+  failed_when: false  
+  notify: restart nginx
+
+- name: "Copy websites from ./files/nginx/sites/<subfolder> to /var/www (if exists)"
+  ansible.builtin.copy:
+    src: "{{ playbook_dir }}/files/nginx/sites/"
+    dest: "/var/www"
+    owner: "{{ docker_uid }}"
+    group: "{{ docker_gid }}"
+    mode: '0740'
+  failed_when: false  
+  notify: restart nginx  
+
+
