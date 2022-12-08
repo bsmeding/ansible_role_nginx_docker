@@ -1,7 +1,7 @@
-set $upstream_authelia http://authelia:9091/api/verify?auth=basic;
+set $upstream_authelia http://{{ nginx__authelia_upstream_host }}:{{ nginx__authelia_upstream_port }}/api/verify;
 
-# Virtual endpoint created by nginx to forward auth requests.
-location /authelia-basic {
+## Virtual endpoint created by nginx to forward auth requests.
+location /authelia {
     ## Essential Proxy Configuration
     internal;
     proxy_pass $upstream_authelia;
