@@ -1,6 +1,6 @@
 ---
 nginx__name: nginx
-nginx__image: lscr.io/linuxserver/nginx:latest
+nginx__image: linuxserver/nginx:latest # lscr.io/linuxserver/nginx:latest
 nginx__port_http: 80
 nginx__port_https: 443
 nginx__skip_setup: false # When true, setup is skipped and only config tasks are executed
