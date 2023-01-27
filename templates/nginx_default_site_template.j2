@@ -4,7 +4,7 @@ server {
 
 {% if item.listen_https is defined %}
     # SSL used start listening and connect certificates
-    listen {{ litem.isten_https }} ssl http2;
+    listen {{ item.listen_https }} ssl http2;
     listen [::]:{{ item.listen_https }} ssl http2;
 
     ssl_certificate /config/keys/{{ item.server_name }}.crt;
