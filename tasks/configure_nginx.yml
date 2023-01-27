@@ -39,15 +39,29 @@
     mode: '0640'
   when: nginx__add_authelia_config|bool
 
-- name: "Copy local certs if exists in {{ playbook_dir }}/files/nginx/certs/ to remove keys folder"
+- name: "Copy certs files for https sites {{ playbook_dir }}/files/nginx/certs/ to  keys folder"
   ansible.builtin.copy:
-    src: "{{ playbook_dir }}/files/nginx/certs/"
-    dest: "{{ nginx__home }}/config/keys"
+    src: "{{ playbook_dir }}/files/nginx/certs/{{ item.server_name }}.crt"
+    dest: "{{ nginx__home }}/config/keys/{{ item.server_name }}.crt"
     owner: "{{ docker_uid | default('root') }}" 
     group: "{{ docker_gid | default('root') }}"
     mode: '0640'
   failed_when: false
+  loop: "{{ nginx__proxy_confs_subdomain }}"
   notify: restart nginx
+  when: nginx__proxy_confs_subdomain is defined and nginx__proxy_confs_subdomain|length>0 and item.listen_https is defined and item.listen_https|int > 0
+
+- name: "Copy certs key files for https sites {{ playbook_dir }}/files/nginx/certs/ to  keys folder"
+  ansible.builtin.copy:
+    src: "{{ playbook_dir }}/files/nginx/certs/{{ item.server_name }}.key"
+    dest: "{{ nginx__home }}/config/keys/{{ item.server_name }}.key"
+    owner: "{{ docker_uid | default('root') }}" 
+    group: "{{ docker_gid | default('root') }}"
+    mode: '0640'
+  failed_when: false
+  loop: "{{ nginx__proxy_confs_subdomain }}"
+  notify: restart nginx
+  when: nginx__proxy_confs_subdomain is defined and nginx__proxy_confs_subdomain|length>0 and item.listen_https is defined and item.listen_https|int > 0
 
 - name: Check if certificate key passwords are set
   ansible.builtin.template:
