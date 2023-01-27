@@ -19,6 +19,7 @@
     owner: "{{ item.owner | default(docker_uid) | default('root') }}" # First docker user (if docker role has run), otherwise default role, otherwise root
     group: "{{ item.group | default(docker_gid) | default('root') }}"
     mode: '0640'
+  when: nginx__add_authelia_config|bool
 
 - name: "Copy authelia-location-basic.conf"
   ansible.builtin.template:
@@ -27,6 +28,7 @@
     owner: "{{ item.owner | default(docker_uid) | default('root') }}" # First docker user (if docker role has run), otherwise default role, otherwise root
     group: "{{ item.group | default(docker_gid) | default('root') }}"
     mode: '0640'
+  when: nginx__add_authelia_config|bool
 
 - name: "Copy authelia-location.conf"
   ansible.builtin.template:
@@ -35,16 +37,42 @@
     owner: "{{ item.owner | default(docker_uid) | default('root') }}" # First docker user (if docker role has run), otherwise default role, otherwise root
     group: "{{ item.group | default(docker_gid) | default('root') }}"
     mode: '0640'
+  when: nginx__add_authelia_config|bool
+
+- name: "Copy local certs if exists in {{ playbook_dir }}/files/nginx/certs/ to remove keys folder"
+  ansible.builtin.copy:
+    src: "{{ playbook_dir }}/files/nginx/certs/"
+    dest: "{{ nginx__home }}/config/keys"
+    owner: "{{ docker_uid | default('root') }}" 
+    group: "{{ docker_gid | default('root') }}"
+    mode: '0640'
+  failed_when: false
+  notify: restart nginx
+
+- name: Check if certificate key passwords are set
+  ansible.builtin.template:
+    src: key_passphrase.j2
+    dest: "{{ nginx__home }}/config/keys/{{ item.server_name }}.passw"
+    owner: "{{ docker_uid | default('root') }}" 
+    group: "{{ docker_gid | default('root') }}"
+    mode: '0640'
+  loop: "{{ nginx__proxy_confs_subdomain }}"
+  notify: restart nginx
+  when: nginx__proxy_confs_subdomain is defined and nginx__proxy_confs_subdomain|length>0 and item.cert_key_passphrase is defined
+
 
 - name: Generate proxy confs from nginx__proxy_confs_subdomain variable
   ansible.builtin.template:
     src: nginx_default_site_template.j2
     dest: "{{ nginx__home }}/config/nginx/site-confs/{{ item.server_name }}.conf"
-    owner: "{{ item.owner | default(docker_uid) | default('root') }}" # First docker user (if docker role has run), otherwise default role, otherwise root
+    owner: "{{ item.owner | default(docker_uid) | default('root') }}" 
     group: "{{ item.group | default(docker_gid) | default('root') }}"
   loop: "{{ nginx__proxy_confs_subdomain }}"
   notify: restart nginx
   when: nginx__proxy_confs_subdomain is defined and nginx__proxy_confs_subdomain|length>0
+
+
+
 
 - name: "Copy local site-confs if exists in {{ playbook_dir }}/files/nginx/site-confs/"
   ansible.builtin.copy:

@@ -11,6 +11,8 @@ nginx__file_volumes: []
 nginx__network_mode: ''
 nginx__network_cidr: '172.16.22.0/24'
 nginx__disable_http_to_https_redirect: false
+nginx__local_certs_path: ''
+nginx__add_authelia_config: false
 nginx__authelia_upstream_host: authelia
 nginx__authelia_upstream_port: 9091
 nginx__network: 'proxy'
@@ -41,6 +43,8 @@ nginx__env: {}
 nginx__proxy_confs_subdomain: []
   # - server_name: dash.example.com
   #   listen: 443
+  #   listen_https: 443 # need to enable https
+  #   cert_key_passphrase: 'sbsta261da' # exampe off passhrase of cert.key file if set. Otherwise don't set this variable
   #   enable_ldap: false
   #   enable_authelia: true
   #   default_upstream_proto: http
