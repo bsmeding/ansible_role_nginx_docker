@@ -3,6 +3,7 @@ nginx__name: nginx
 nginx__image: linuxserver/nginx:latest # lscr.io/linuxserver/nginx:latest
 nginx__port_http: 80
 nginx__port_https: 443
+nginx__trusted_proxy_cidrs: []
 nginx__skip_setup: false # When true, setup is skipped and only config tasks are executed
 nginx__remove_existing_container: no
 nginx__remove_existing_home_dir: no  # ONLY FOR AUTOMATED TEST!! WILL REMOVE ALL DATA!!!!

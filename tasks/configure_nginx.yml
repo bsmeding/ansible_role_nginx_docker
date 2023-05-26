@@ -4,9 +4,9 @@
 # Proxy confs must end in subdomain.conf to auto load
 
 - name: "Copy proxy.conf"
-  ansible.builtin.copy:
-    src: "proxy.conf"
-    dest: "{{ nginx__home }}/config/nginx/"
+  ansible.builtin.template:
+    src: proxy.conf.j2
+    dest: "{{ nginx__home }}/config/nginx/proxy.conf"
     owner: "{{ docker_uid }}"
     group: "{{ docker_gid }}"
     mode: '0640'
