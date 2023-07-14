@@ -98,9 +98,29 @@
   failed_when: false
   notify: restart nginx
 
+- name: "Copy local site-confs for this host if exists in {{ playbook_dir }}/files/nginx/{{ inventory_hostname }}site-confs/"
+  ansible.builtin.copy:
+    src: "{{ playbook_dir }}/files/nginx/{{ inventory_hostname }}/site-confs/"
+    dest: "{{ nginx__home }}/config/nginx/site-confs"
+    owner: "{{ docker_uid }}"
+    group: "{{ docker_gid }}"
+    mode: '0640'
+  failed_when: false
+  notify: restart nginx
+
 - name: "Copy websites from ./files/nginx/sites/<subfolder> to /var/www (if exists)"
   ansible.builtin.copy:
     src: "{{ playbook_dir }}/files/nginx/sites/"
+    dest: "/var/www"
+    owner: "{{ docker_uid }}"
+    group: "{{ docker_gid }}"
+    mode: '0740'
+  failed_when: false
+  notify: restart nginx
+
+- name: "Copy websites for this host from ./files/nginx/{{ inventory_hostname }}/sites/<subfolder> to /var/www (if exists)"
+  ansible.builtin.copy:
+    src: "{{ playbook_dir }}/files/nginx/{{ inventory_hostname }}/sites/"
     dest: "/var/www"
     owner: "{{ docker_uid }}"
     group: "{{ docker_gid }}"

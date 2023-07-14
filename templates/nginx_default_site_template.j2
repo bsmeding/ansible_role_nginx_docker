@@ -12,11 +12,11 @@ server {
     listen 80;
     listen [::]:80;
 
-   server_name {{ item.server_name }};
+    server_name {{ item.server_name }};
 
-   # redirect to https
-   return 301 https://$server_name$request_uri;
-   
+    # redirect to https
+    return 301 https://$server_name$request_uri;
+
 }
 server {
 

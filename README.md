@@ -24,9 +24,12 @@ nginx__proxy_confs_subdomain:
 
 ## Site files
 If you wnat to copy a website directory, place them in `/files/nginx/sites/<site_directory>`
+or `/files/nginx/<inventory_hostname/sites/<site_directory>` when you deploy multiple servers with different sites
+
 
 ## Site-conf files
 If you want specific site-config files to be copied, place them in you're playbook dir `/files/nginx/site-confs/` they must be in nginx site config file <site.conf>
+Or in `/files/nginx/<inventory_hostname/site-confs/` to seperate hosts configs
 
 ## https / ssl / Certificate
 Is you need certificates, plase them in your playbook directory under `files/nginx/certs/` name them as `website_url.crt` and `website_url.key`
