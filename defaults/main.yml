@@ -36,6 +36,7 @@ nginx__ports:
 - "{{ nginx__port_https }}:443"
 nginx__directory_volumes:
 - "{{ nginx__home }}/config:/config"
+- "/var/www:/var/www"
 nginx__default_env:
   TZ: "{{ container_time_zone | default('Europe/Paris') }}"
   PUID: "{{ docker_uid|default(1040) }}"
@@ -51,3 +52,6 @@ nginx__proxy_confs_subdomain: []
   #   default_upstream_proto: http
   #   default_upstream_url: dashboard
   #   default_upstream_port: 9090
+  #   acl_list_allowed_cidr: # default deny will be added
+  #     - 192.168.0.0/24
+  #     - 192.168.18.0/24

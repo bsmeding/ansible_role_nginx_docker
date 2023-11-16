@@ -37,6 +37,15 @@ server {
 {% endif %}
 {% endif %}{# end if listen_https is undefined #}
 
+    # Set ACL if defined
+{% if item.acl_list_allowed_cidr is defined and item.acl_list_allowed_cidr|length>0 %}
+{% for acl_item in item.acl_list_allowed_cidr %}
+    allow  {{ acl_item }};
+{% endfor %}
+
+    deny   all;
+{% endif %}
+
 
     # Set log files
     access_log /config/log/nginx/{{ item.server_name }}.access.log;
