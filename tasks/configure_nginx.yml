@@ -77,7 +77,7 @@
 
 - name: Generate proxy confs from nginx__proxy_confs_subdomain variable
   ansible.builtin.template:
-    src: nginx_default_site_template.j2
+    src: template_subdomain.conf.j2
     dest: "{{ nginx__home }}/config/nginx/site-confs/{{ item.server_name }}.conf"
     owner: "{{ item.owner | default(docker_uid) | default('root') }}" 
     group: "{{ item.group | default(docker_gid) | default('root') }}"
