@@ -1,0 +1,6 @@
+---
+python_packages:
+  - name: netaddr
+  - name: requests
+
+os_packages: []
