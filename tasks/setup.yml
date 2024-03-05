@@ -29,6 +29,7 @@
       - subnet: "{{ nginx__network_cidr }}"
         gateway: "{{ nginx__network_cidr | ansible.utils.ipaddr('next_usable') }}"
         iprange: "{{ nginx__network_cidr }}"
+  when: nginx__network_cidr is defined and nginx__network_cidr != ''
 
 - name: Run nginx container
   docker_container:
