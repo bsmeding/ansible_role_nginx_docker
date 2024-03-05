@@ -55,7 +55,7 @@
   ansible.builtin.copy:
     src: "{{ playbook_dir }}/files/nginx/certs/{{ item.server_name }}.key"
     dest: "{{ nginx__home }}/config/keys/{{ item.server_name }}.key"
-    owner: "{{ docker_uid | default('root') }}" 
+    owner: "{{ docker_uid | default('root') }}"
     group: "{{ docker_gid | default('root') }}"
     mode: '0640'
   failed_when: false

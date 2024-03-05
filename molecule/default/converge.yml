@@ -22,11 +22,6 @@
       changed_when: false
       failed_when: systemctl_status.rc > 1
 
-    - name: Install PIP packages
-      ansible.builtin.pip:
-        name:
-          - netaddr
-        state: present
   roles:
     - role: bsmeding.docker
     - role: bsmeding.nginx_docker

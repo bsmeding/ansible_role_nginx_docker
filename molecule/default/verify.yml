@@ -9,7 +9,7 @@
         return_content: true
       register: local_webserver_output
       # failed_when: this is failed or "'AWESOME' not in this.content"
-    
+
     - name: Show output
       debug:
         var: local_webserver_output
