@@ -6,21 +6,21 @@ galaxy_info:
   company: b@rtsmeding.nl
   min_ansible_version: '2.10'
   platforms:
-  - name: Ubuntu
-    versions:
-    - bionic
-    - focal
-    - jammy
-  - name: Debian
-    versions:
-    - stretch
-    - buster
-    - bullseye
-  galaxy_tags:
-  - nginx
-  - reverse proxy
-  - linuxserver
-  - docker
+    - name: Ubuntu
+      versions:
+      - bionic
+      - focal
+      - jammy
+    - name: Debian
+      versions:
+      - stretch
+      - buster
+      - bullseye
+    galaxy_tags:
+    - nginx
+    - reverse proxy
+    - linuxserver
+    - docker
 
 dependencies: []
   # - bsmeding.docker

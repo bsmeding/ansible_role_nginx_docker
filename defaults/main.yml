@@ -5,8 +5,8 @@ nginx__port_http: 80
 nginx__port_https: 443
 nginx__trusted_proxy_cidrs: []
 nginx__skip_setup: false # When true, setup is skipped and only config tasks are executed
-nginx__remove_existing_container: no
-nginx__remove_existing_home_dir: no  # ONLY FOR AUTOMATED TEST!! WILL REMOVE ALL DATA!!!!
+nginx__remove_existing_container: false
+nginx__remove_existing_home_dir: false  # ONLY FOR AUTOMATED TEST!! WILL REMOVE ALL DATA!!!!
 nginx__pull_image: yes
 nginx__file_volumes: []
 nginx__network_mode: ''
@@ -25,18 +25,18 @@ nginx__log_driver: json-file
 nginx__log_options:
 nginx__home: "/opt/{{ nginx__name }}"
 nginx__directories:
-- path: "{{ nginx__home }}"
-  mode: "0760"
-- path: "{{ nginx__home }}/config"
-  mode: "0770"
-  owner: "{{ docker_uid|default(1040) }}"
-  group: "{{ docker_gid|default(1001) }}"
+  - path: "{{ nginx__home }}"
+    mode: "0760"
+  - path: "{{ nginx__home }}/config"
+    mode: "0770"
+    owner: "{{ docker_uid|default(1040) }}"
+    group: "{{ docker_gid|default(1001) }}"
 nginx__ports:
-- "{{ nginx__port_http }}:80"
-- "{{ nginx__port_https }}:443"
+  - "{{ nginx__port_http }}:80"
+  - "{{ nginx__port_https }}:443"
 nginx__directory_volumes:
-- "{{ nginx__home }}/config:/config"
-- "/var/www:/var/www"
+  - "{{ nginx__home }}/config:/config"
+  - "/var/www:/var/www"
 nginx__default_env:
   TZ: "{{ container_time_zone | default('Europe/Paris') }}"
   PUID: "{{ docker_uid|default(1040) }}"

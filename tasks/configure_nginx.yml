@@ -43,7 +43,7 @@
   ansible.builtin.copy:
     src: "{{ playbook_dir }}/files/nginx/certs/{{ item.server_name }}.crt"
     dest: "{{ nginx__home }}/config/keys/{{ item.server_name }}.crt"
-    owner: "{{ docker_uid | default('root') }}" 
+    owner: "{{ docker_uid | default('root') }}"
     group: "{{ docker_gid | default('root') }}"
     mode: '0640'
   failed_when: false
@@ -67,7 +67,7 @@
   ansible.builtin.template:
     src: key_passphrase.j2
     dest: "{{ nginx__home }}/config/keys/{{ item.server_name }}.passw"
-    owner: "{{ docker_uid | default('root') }}" 
+    owner: "{{ docker_uid | default('root') }}"
     group: "{{ docker_gid | default('root') }}"
     mode: '0640'
   loop: "{{ nginx__proxy_confs_subdomain }}"
@@ -79,14 +79,11 @@
   ansible.builtin.template:
     src: template_subdomain.conf.j2
     dest: "{{ nginx__home }}/config/nginx/site-confs/{{ item.server_name }}.conf"
-    owner: "{{ item.owner | default(docker_uid) | default('root') }}" 
+    owner: "{{ item.owner | default(docker_uid) | default('root') }}"
     group: "{{ item.group | default(docker_gid) | default('root') }}"
   loop: "{{ nginx__proxy_confs_subdomain }}"
   notify: restart nginx
   when: nginx__proxy_confs_subdomain is defined and nginx__proxy_confs_subdomain|length>0
-
-
-
 
 - name: "Copy local site-confs if exists in {{ playbook_dir }}/files/nginx/site-confs/"
   ansible.builtin.copy:
