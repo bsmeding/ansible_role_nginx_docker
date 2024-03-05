@@ -1,6 +1,6 @@
 ---
 python_packages:
-  - name: netaddr
-  - name: requests
+  - netaddr
+  - requests
 
 os_packages: []
