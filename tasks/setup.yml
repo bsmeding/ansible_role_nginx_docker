@@ -8,7 +8,7 @@
     version={{ item.version | default(omit) }}
   with_items: "{{ os_packages }}"
   become: true
-  when: os_packages is defined and os_packages|lenght>0
+  when: os_packages is defined
 
 - name: Install  pip packages
   ansible.builtin.pip:
@@ -19,7 +19,7 @@
     umask: "0022"
   changed_when: false
   with_items: "{{ python_packages }}"
-  when: python_packages is defined and python_packages|length>0
+  when: python_packages is defined
 
 - name: Remove existing {{ nginx__name }} container
   docker_container:
