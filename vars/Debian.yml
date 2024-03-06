@@ -3,4 +3,5 @@ python_packages:
   - netaddr
   - requests
 
-os_packages: []
+os_packages:
+  - python3-pip
