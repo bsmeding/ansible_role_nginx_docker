@@ -9,7 +9,7 @@
     dest: "{{ nginx__home }}/config/nginx/proxy.conf"
     owner: "{{ docker_uid | default('root') }}"
     group: "{{ docker_gid | default('root') }}"
-    mode: '0640'
+    mode: '0660'
   failed_when: false
 
 - name: "Copy authelia-authrequest.conf"
@@ -18,7 +18,7 @@
     dest: "{{ nginx__home }}/config/nginx/authelia-authrequest.conf"
     owner: "{{ item.owner | default(docker_uid) | default('root') }}" # First docker user (if docker role has run), otherwise default role, otherwise root
     group: "{{ item.group | default(docker_gid) | default('root') }}"
-    mode: '0640'
+    mode: '0660'
   when: nginx__add_authelia_config|bool
 
 - name: "Copy authelia-location-basic.conf"
@@ -27,7 +27,7 @@
     dest: "{{ nginx__home }}/config/nginx/authelia-location-basic.conf"
     owner: "{{ item.owner | default(docker_uid) | default('root') }}" # First docker user (if docker role has run), otherwise default role, otherwise root
     group: "{{ item.group | default(docker_gid) | default('root') }}"
-    mode: '0640'
+    mode: '0660'
   when: nginx__add_authelia_config|bool
 
 - name: "Copy authelia-location.conf"
@@ -36,7 +36,7 @@
     dest: "{{ nginx__home }}/config/nginx/authelia-location.conf"
     owner: "{{ item.owner | default(docker_uid) | default('root') }}" # First docker user (if docker role has run), otherwise default role, otherwise root
     group: "{{ item.group | default(docker_gid) | default('root') }}"
-    mode: '0640'
+    mode: '0660'
   when: nginx__add_authelia_config|bool
 
 - name: "Copy certs files for https sites {{ playbook_dir }}/files/nginx/certs/ to  keys folder"
@@ -45,7 +45,7 @@
     dest: "{{ nginx__home }}/config/keys/{{ item.server_name }}.crt"
     owner: "{{ docker_uid | default('root') }}"
     group: "{{ docker_gid | default('root') }}"
-    mode: '0640'
+    mode: '0660'
   failed_when: false
   loop: "{{ nginx__proxy_confs_subdomain }}"
   no_log: "{{ nginx__hide_sensitive_logs }}"
