@@ -7,8 +7,8 @@
   ansible.builtin.template:
     src: proxy.conf.j2
     dest: "{{ nginx__home }}/config/nginx/proxy.conf"
-    owner: "{{ docker_uid }}"
-    group: "{{ docker_gid }}"
+    owner: "{{ docker_uid | default('root') }}"
+    group: "{{ docker_gid | default('root') }}"
     mode: '0640'
   failed_when: false
 
