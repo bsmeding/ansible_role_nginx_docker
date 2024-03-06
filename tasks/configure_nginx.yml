@@ -48,6 +48,7 @@
     mode: '0640'
   failed_when: false
   loop: "{{ nginx__proxy_confs_subdomain }}"
+  no_log: "{{ nginx__hide_sensitive_logs }}"
   notify: restart nginx
   when: nginx__proxy_confs_subdomain is defined and nginx__proxy_confs_subdomain|length>0 and item.listen_https is defined and item.listen_https|int > 0
 
@@ -60,6 +61,7 @@
     mode: '0640'
   failed_when: false
   loop: "{{ nginx__proxy_confs_subdomain }}"
+  no_log: "{{ nginx__hide_sensitive_logs }}"
   notify: restart nginx
   when: nginx__proxy_confs_subdomain is defined and nginx__proxy_confs_subdomain|length>0 and item.listen_https is defined and item.listen_https|int > 0
 
@@ -71,6 +73,7 @@
     group: "{{ docker_gid | default('root') }}"
     mode: '0640'
   loop: "{{ nginx__proxy_confs_subdomain }}"
+  no_log: "{{ nginx__hide_sensitive_logs }}"
   notify: restart nginx
   when: nginx__proxy_confs_subdomain is defined and nginx__proxy_confs_subdomain|length>0 and item.cert_key_passphrase is defined
 

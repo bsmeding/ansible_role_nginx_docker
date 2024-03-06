@@ -1,6 +1,7 @@
 ---
 nginx__name: nginx
 nginx__image: linuxserver/nginx:latest # lscr.io/linuxserver/nginx:latest
+nginx__hide_sensitive_logs: true
 nginx__port_http: 80
 nginx__port_https: 443
 nginx__trusted_proxy_cidrs: []
