@@ -11,6 +11,7 @@
     group: "{{ docker_gid | default('root') }}"
     mode: '0660'
   failed_when: false
+  notify: restart nginx
 
 - name: "Copy authelia-authrequest.conf"
   ansible.builtin.template:
@@ -20,6 +21,7 @@
     group: "{{ item.group | default(docker_gid) | default('root') }}"
     mode: '0660'
   when: nginx__add_authelia_config|bool
+  notify: restart nginx
 
 - name: "Copy authelia-location-basic.conf"
   ansible.builtin.template:
@@ -29,6 +31,7 @@
     group: "{{ item.group | default(docker_gid) | default('root') }}"
     mode: '0660'
   when: nginx__add_authelia_config|bool
+  notify: restart nginx
 
 - name: "Copy authelia-location.conf"
   ansible.builtin.template:
@@ -38,6 +41,7 @@
     group: "{{ item.group | default(docker_gid) | default('root') }}"
     mode: '0660'
   when: nginx__add_authelia_config|bool
+  notify: restart nginx
 
 - name: "Copy certs files for https sites {{ playbook_dir }}/files/nginx/certs/ to  keys folder"
   ansible.builtin.copy:
@@ -49,8 +53,8 @@
   failed_when: false
   loop: "{{ nginx__proxy_confs_subdomain }}"
   no_log: "{{ nginx__hide_sensitive_logs }}"
-  notify: restart nginx
   when: nginx__proxy_confs_subdomain is defined and nginx__proxy_confs_subdomain|length>0 and item.listen_https is defined and item.listen_https|int > 0
+  notify: restart nginx
 
 - name: "Copy certs key files for https sites {{ playbook_dir }}/files/nginx/certs/ to  keys folder"
   ansible.builtin.copy:

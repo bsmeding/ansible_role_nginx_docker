@@ -23,7 +23,7 @@ nginx__container_networks:
   - name: "{{ nginx__network }}"
 nginx__purge_networks: no
 nginx__log_driver: json-file
-nginx__log_options:
+# nginx__log_options:
 nginx__home: "/opt/{{ nginx__name }}"
 nginx__directories:
   - path: "{{ nginx__home }}"
