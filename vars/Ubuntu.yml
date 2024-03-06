@@ -4,4 +4,4 @@ python_packages:
   - requests
 
 os_packages:
-  - python3-pip
+  - name: python3-pip
