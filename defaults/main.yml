@@ -10,7 +10,7 @@ nginx__remove_existing_container: false
 nginx__remove_existing_home_dir: false  # ONLY FOR AUTOMATED TEST!! WILL REMOVE ALL DATA!!!!
 nginx__pull_image: yes
 nginx__file_volumes: []
-nginx__network_mode: ''
+nginx__network_mode: 'bridge'
 nginx__network_cidr: '172.16.22.0/24'
 nginx__disable_http_to_https_redirect: false
 nginx__local_certs_path: ''
