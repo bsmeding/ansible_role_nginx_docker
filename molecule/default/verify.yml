@@ -3,14 +3,14 @@
   hosts: all
   become: false
   tasks:
-    - name: Include vars
-      ansible.builtin.include_vars:
-        file: ../../../defaults/main.yml
-        name: Include defaults
+    # - name: Include vars
+    #   ansible.builtin.include_vars:
+    #     file: ../../../defaults/main.yml
+    #     name: Include defaults
 
     - name: Check that if default page is running
       ansible.builtin.uri:
-        url: "http://localhost{{ nginx__port_http }}"
+        url: "http://localhost:80" # {{ nginx__port_http  }}
         return_content: true
       register: local_webserver_output
       # failed_when: this is failed or "'AWESOME' not in this.content"
