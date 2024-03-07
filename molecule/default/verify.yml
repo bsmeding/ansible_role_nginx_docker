@@ -5,7 +5,7 @@
   tasks:
     - name: Include vars
       ansible.builtin.include_vars:
-        file: ../defaults/main.yml
+        file: ../../../../defaults/main.yml
         name: Include defaults
 
     - name: Check that if default page is running
