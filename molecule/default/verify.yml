@@ -1,8 +1,13 @@
 ---
-- name: Verify - config AWX with base settings
+- name: Verify - Nginx is running
   hosts: all
   become: false
   tasks:
+    - name: Include vars
+      ansible.builtin.include_vars:
+        file: ../defaults/main.yml
+        name: Include defaults
+
     - name: Check that if default page is running
       ansible.builtin.uri:
         url: "http://localhost{{ nginx__port_http }}"
