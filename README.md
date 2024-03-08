@@ -1,6 +1,9 @@
 # Nginx reverse proxy Helper
 NGINX reverse proxy server
 
+![test status](https://github.com/bsmeding/ansible_role_nginx_docker/actions/workflows/ci.yml/badge.svg) 
+Role is tested on, Ubuntu, Debian and Rocky (RedHat like) Linux distributions.
+
 Used to be the frontend when deploying Docker containers on platforms
 Default image is from Linuxserver: https://docs.linuxserver.io/images/docker-nginx
 
