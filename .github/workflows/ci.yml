@@ -41,10 +41,11 @@ jobs:
     strategy:
       matrix:
         distro:
+          - debian11
           - debian12
+          - rockylinux8
           - rockylinux9
-          - ubuntu2204
-          - fedora42
+          # - fedora42
 
     steps:
       - name: Check out the codebase.
