@@ -1,20 +1,23 @@
 ---
-role_name_check: 1
 dependency:
   name: galaxy
   options:
     ignore-errors: true
+
 driver:
   name: docker
+
 platforms:
   - name: instance
     image: "bsmeding/ansible_cicd_${MOLECULE_DISTRO:-debian12}:latest"
     command: ${MOLECULE_DOCKER_COMMAND:-""}
-    volumes:
-      - /sys/fs/cgroup:/sys/fs/cgroup:rw
     cgroupns_mode: host
     privileged: true
     pre_build_image: true
+    tty: true
+    volumes:
+      - /sys/fs/cgroup:/sys/fs/cgroup:rw
+
 provisioner:
   name: ansible
   playbooks:

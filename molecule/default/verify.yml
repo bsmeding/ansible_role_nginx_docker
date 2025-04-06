@@ -2,6 +2,7 @@
 - name: Verify - Nginx is running
   hosts: all
   become: false
+  gather_facts: false
   tasks:
     - name: Include default vars
       ansible.builtin.include_vars:
