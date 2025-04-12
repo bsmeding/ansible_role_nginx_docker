@@ -20,7 +20,6 @@
         name: python3-docker
         state: present
 
-
   #   - name: Wait for systemd to complete initialization
   #     ansible.builtin.command: systemctl is-system-running
   #     register: systemctl_status
