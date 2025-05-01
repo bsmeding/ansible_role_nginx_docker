@@ -15,7 +15,7 @@
     name: "{{ item }}"
     state: forcereinstall
     executable: pip3
-    extra_args: "--user --upgrade"
+    extra_args: "{{ nginx__pip_packages_extra_args }}"
     umask: "0022"
   changed_when: false
   with_items: "{{ python_packages }}"
