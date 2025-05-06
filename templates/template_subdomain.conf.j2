@@ -2,15 +2,15 @@
 # Only http used
 server {
     listen {{ item.listen }};
-    listen [::]:{{ {{ item.listen }};
+    listen [::]:{{ item.listen }};
 
    server_name {{ item.server_name }};
 
 {% else %}
 # http and https, first redirect http to https
 server {
-    listen {{ item.listen }};
-    listen [::]:{{ item.listen }};
+    listen {{ item.listen | default(80) }};
+    listen [::]:{{ item.listen | default(80) }};
 
     server_name {{ item.server_name }};
 
