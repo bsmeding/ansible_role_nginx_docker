@@ -32,4 +32,4 @@
         that:
           - nginx_container_info.exists
           - nginx_container_info.container.State.Status == "running"
-        fail_msg: "Nginx container is not running"
+        fail_msg: "Nginx container is not running" 
