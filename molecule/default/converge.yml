@@ -1,5 +1,5 @@
 ---
-- name: Converge Nautobot 2.x
+- name: Converge Nginx Docker
   hosts: all
   become: true
   vars:
@@ -9,6 +9,8 @@
     nginx__network_cidr: '172.16.23.0/24'
     nginx__remove_existing_container: true
     nginx__remove_existing_home_dir: true
+    # Skip Docker service management in test environment
+    docker_service_manage: false
   pre_tasks:
     - name: Update apt cache
       ansible.builtin.apt:
@@ -28,6 +30,18 @@
       changed_when: false
       failed_when: systemctl_status.rc > 1
 
+    - name: Check if Docker socket exists
+      stat:
+        path: /var/run/docker.sock
+      register: docker_socket
+
+    - name: Ensure Docker socket permissions are correct
+      file:
+        path: /var/run/docker.sock
+        mode: '0666'
+      when: docker_socket.stat.exists and docker_socket.stat.exists
+
   roles:
     - role: bsmeding.docker
+      when: docker_socket.stat.exists and docker_socket.stat.exists
     - role: bsmeding.nginx_docker
