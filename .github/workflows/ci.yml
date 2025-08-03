@@ -42,7 +42,8 @@ jobs:
       matrix:
         distro:
           # - debian11
-          - debian12
+          # - debian12
+          - ubuntu2204
           # - rockylinux8
           # - rockylinux9
           # - fedora42
