@@ -6,7 +6,7 @@ galaxy_info:
   author: bsmeding
   description: NGINX webserver running in docker container
   company: "b@rtsmeding.nl"
-  license: "license (BSD, MIT)"
+  license: MIT
   min_ansible_version: 2.10
   platforms:
     - name: Fedora
@@ -31,4 +31,4 @@ galaxy_info:
   galaxy_tags:
     - web
     - system
-    - nginx
+    - nginx 
