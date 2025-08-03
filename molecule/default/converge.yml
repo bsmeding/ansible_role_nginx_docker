@@ -2,6 +2,13 @@
 - name: Converge Nautobot 2.x
   hosts: all
   become: true
+  vars:
+    nginx__port_http: 8080
+    nginx__port_https: 8443
+    nginx__network: 'test_nginx_network'
+    nginx__network_cidr: '172.16.23.0/24'
+    nginx__remove_existing_container: true
+    nginx__remove_existing_home_dir: true
   pre_tasks:
     - name: Update apt cache
       ansible.builtin.apt:

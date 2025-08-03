@@ -12,7 +12,7 @@
 
     - name: Check that if default page is running
       ansible.builtin.uri:
-        url: "http://localhost:{{ nginx__port_http  }}"
+        url: "http://localhost:8080"
         return_content: true
       register: local_webserver_output
       failed_when: local_webserver_output is failed or local_webserver_output.status != 200
@@ -21,3 +21,15 @@
     - name: Show output
       debug:
         var: local_webserver_output
+
+    - name: Verify nginx container is running
+      community.docker.docker_container_info:
+        name: "{{ nginx__name }}"
+      register: nginx_container_info
+
+    - name: Check nginx container status
+      assert:
+        that:
+          - nginx_container_info.exists
+          - nginx_container_info.container.State.Status == "running"
+        fail_msg: "Nginx container is not running"
