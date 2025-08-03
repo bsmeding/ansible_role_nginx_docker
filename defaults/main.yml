@@ -24,7 +24,7 @@ nginx__container_networks:
   - name: "{{ nginx__network }}"
 nginx__purge_networks: false
 nginx__log_driver: json-file
-# nginx__log_options:
+  # nginx__log_options:
 nginx__home: "/opt/{{ nginx__name }}"
 nginx__directories:
   - path: "{{ nginx__home }}"
@@ -56,4 +56,4 @@ nginx__proxy_confs_subdomain: []
   #   default_upstream_port: 9090
   #   acl_list_allowed_cidr: # default deny will be added
   #     - 192.168.0.0/24
-  #     - 192.168.18.0/24 
+  #     - 192.168.18.0/24

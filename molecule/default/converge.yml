@@ -44,4 +44,4 @@
   roles:
     - role: bsmeding.docker
       when: docker_socket.stat.exists and docker_socket.stat.exists
-    - role: bsmeding.nginx_docker 
+    - role: bsmeding.nginx_docker

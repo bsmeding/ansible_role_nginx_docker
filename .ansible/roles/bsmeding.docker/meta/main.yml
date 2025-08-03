@@ -2,11 +2,11 @@
 dependencies: []
 
 galaxy_info:
-  role_name: nginx_docker
+  role_name: docker
   author: bsmeding
-  description: NGINX webserver running in docker container
+  description: Docker for Linux, Forked from geerlingguy.docker.
   company: "b@rtsmeding.nl"
-  license: MIT
+  license: "license (BSD, MIT)"
   min_ansible_version: 2.10
   platforms:
     - name: Fedora
@@ -31,4 +31,8 @@ galaxy_info:
   galaxy_tags:
     - web
     - system
-    - nginx
+    - containers
+    - docker
+    - orchestration
+    - compose
+    - server

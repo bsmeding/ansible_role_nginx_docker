@@ -130,4 +130,4 @@
     group: "{{ docker_gid }}"
     mode: '0740'
   failed_when: false
-  notify: restart nginx 
+  notify: restart nginx

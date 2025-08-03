@@ -1,6 +1,7 @@
 ---
 name: CI
 'on':
+  workflow_dispatch:
   pull_request:
   push:
     branches:
@@ -10,21 +11,20 @@ name: CI
 
 defaults:
   run:
-    working-directory: 'bsmeding.nginx_docker'
+    working-directory: 'bsmeding.docker'
 
 jobs:
-
   lint:
     name: Lint
     runs-on: ubuntu-latest
     steps:
       - name: Check out the codebase.
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
         with:
-          path: 'bsmeding.nginx_docker'
+          path: 'bsmeding.docker'
 
       - name: Set up Python 3.
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v5
         with:
           python-version: '3.x'
 
@@ -41,21 +41,23 @@ jobs:
     strategy:
       matrix:
         distro:
-          # - debian11
-          # - debian12
+          - debian11
+          - debian12
+          - rockylinux8
+          - rockylinux9
           - ubuntu2204
-          # - rockylinux8
-          # - rockylinux9
-          # - fedora42
+          # - ubuntu2404
+          # - fedora39
+          # - fedora40
 
     steps:
       - name: Check out the codebase.
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
         with:
-          path: 'bsmeding.nginx_docker'
+          path: 'bsmeding.docker'
 
       - name: Set up Python 3.
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v5
         with:
           python-version: '3.x'
 
