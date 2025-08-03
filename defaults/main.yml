@@ -5,10 +5,10 @@ nginx__hide_sensitive_logs: true
 nginx__port_http: 80
 nginx__port_https: 443
 nginx__trusted_proxy_cidrs: []
-nginx__skip_setup: false                  # When true, setup is skipped and only config tasks are executed
-nginx__pip_packages_extra_args: ''        # Example: '--user --upgrade --break-system-packages'
+nginx__skip_setup: false                          # When true, setup is skipped and only config tasks are executed
+nginx__pip_packages_extra_args: ''                # Example: '--user --upgrade --break-system-packages'
 nginx__remove_existing_container: false
-nginx__remove_existing_home_dir: false    # ONLY FOR AUTOMATED TEST!! WILL REMOVE ALL DATA!!!!
+nginx__remove_existing_home_dir: false            # ONLY FOR AUTOMATED TEST!! WILL REMOVE ALL DATA!!!!
 nginx__pull_image: yes
 nginx__file_volumes: []
 nginx__network_mode: 'bridge'
