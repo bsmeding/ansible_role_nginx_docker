@@ -50,11 +50,13 @@
     owner: "{{ docker_uid | default('root') }}"
     group: "{{ docker_gid | default('root') }}"
     mode: '0660'
-  failed_when: false
+  ignore_errors: true
   loop: "{{ nginx__proxy_confs_subdomain }}"
   no_log: "{{ nginx__hide_sensitive_logs }}"
   when: nginx__proxy_confs_subdomain is defined and nginx__proxy_confs_subdomain|length>0 and item.listen_https is defined and item.listen_https|int > 0
   notify: restart nginx
+  changed_when: false
+  failed_when: false
 
 - name: "Copy certs key files for https sites {{ playbook_dir }}/files/nginx/certs/ to  keys folder"
   ansible.builtin.copy:
@@ -63,11 +65,13 @@
     owner: "{{ docker_uid | default('root') }}"
     group: "{{ docker_gid | default('root') }}"
     mode: '0640'
-  failed_when: false
+  ignore_errors: true
   loop: "{{ nginx__proxy_confs_subdomain }}"
   no_log: "{{ nginx__hide_sensitive_logs }}"
   notify: restart nginx
   when: nginx__proxy_confs_subdomain is defined and nginx__proxy_confs_subdomain|length>0 and item.listen_https is defined and item.listen_https|int > 0
+  changed_when: false
+  failed_when: false
 
 - name: Check if certificate key passwords are set
   ansible.builtin.template:
@@ -92,6 +96,11 @@
   notify: restart nginx
   when: nginx__proxy_confs_subdomain is defined and nginx__proxy_confs_subdomain|length>0
 
+- name: Check if site-confs directory exists
+  ansible.builtin.stat:
+    path: "{{ playbook_dir }}/files/nginx/site-confs"
+  register: site_confs_dir
+
 - name: "Copy local site-confs if exists in {{ playbook_dir }}/files/nginx/site-confs/"
   ansible.builtin.copy:
     src: "{{ playbook_dir }}/files/nginx/site-confs/"
@@ -99,18 +108,28 @@
     owner: "{{ docker_uid }}"
     group: "{{ docker_gid }}"
     mode: '0640'
-  failed_when: false
+  when: site_confs_dir.stat.exists and site_confs_dir.stat.isdir
   notify: restart nginx
 
-- name: "Copy local site-confs for this host if exists in {{ playbook_dir }}/files/nginx/{{ inventory_hostname }}site-confs/"
+- name: Check if host-specific site-confs directory exists
+  ansible.builtin.stat:
+    path: "{{ playbook_dir }}/files/nginx/{{ inventory_hostname }}/site-confs"
+  register: host_site_confs_dir
+
+- name: "Copy local site-confs for this host if exists in {{ playbook_dir }}/files/nginx/{{ inventory_hostname }}/site-confs/"
   ansible.builtin.copy:
     src: "{{ playbook_dir }}/files/nginx/{{ inventory_hostname }}/site-confs/"
     dest: "{{ nginx__home }}/config/nginx/site-confs"
     owner: "{{ docker_uid }}"
     group: "{{ docker_gid }}"
     mode: '0640'
-  failed_when: false
+  when: host_site_confs_dir.stat.exists and host_site_confs_dir.stat.isdir
   notify: restart nginx
+
+- name: Check if sites directory exists
+  ansible.builtin.stat:
+    path: "{{ playbook_dir }}/files/nginx/sites"
+  register: sites_dir
 
 - name: "Copy websites from ./files/nginx/sites/<subfolder> to /var/www (if exists)"
   ansible.builtin.copy:
@@ -119,8 +138,13 @@
     owner: "{{ docker_uid }}"
     group: "{{ docker_gid }}"
     mode: '0740'
-  failed_when: false
+  when: sites_dir.stat.exists and sites_dir.stat.isdir
   notify: restart nginx
+
+- name: Check if host-specific sites directory exists
+  ansible.builtin.stat:
+    path: "{{ playbook_dir }}/files/nginx/{{ inventory_hostname }}/sites"
+  register: host_sites_dir
 
 - name: "Copy websites for this host from ./files/nginx/{{ inventory_hostname }}/sites/<subfolder> to /var/www (if exists)"
   ansible.builtin.copy:
@@ -129,5 +153,5 @@
     owner: "{{ docker_uid }}"
     group: "{{ docker_gid }}"
     mode: '0740'
-  failed_when: false
+  when: host_sites_dir.stat.exists and host_sites_dir.stat.isdir
   notify: restart nginx
