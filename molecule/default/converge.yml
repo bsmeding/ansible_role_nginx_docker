@@ -39,6 +39,11 @@
         mode: '0666'
       when: docker_socket.stat.exists and docker_socket.stat.exists
 
+    - name: Ensure /tmp/.ansible exists
+      ansible.builtin.shell: |
+        mkdir -p /tmp/.ansible
+        chmod 1777 /tmp
+      changed_when: false
   roles:
     - role: bsmeding.docker
     - role: bsmeding.nginx_docker
