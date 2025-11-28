@@ -18,7 +18,7 @@ platforms:
     tmpfs:
       - /run
       - /run/lock
-      - /tmp
+      - /tmp:rw,size=100M,mode=1777
     environment:
       container: docker
     privileged: true
@@ -58,4 +58,3 @@ provisioner:
     defaults:
       remote_tmp: /tmp/.ansible
       roles_path: "../../../"
-      
