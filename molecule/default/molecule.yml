@@ -19,7 +19,6 @@ platforms:
       - /run
       - /run/lock
       - /tmp:rw,size=100M,mode=1777
-      - /var/tmp:rw,size=200M,mode=1777
     environment:
       container: docker
     privileged: true
