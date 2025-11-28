@@ -12,8 +12,9 @@ platforms:
   - name: instance
     image: "bsmeding/ansible_cicd_${MOLECULE_DISTRO:-ubuntu2204}:latest"
     command: ${MOLECULE_DOCKER_COMMAND:-"/sbin/init"}
-    volumes:
-      - /sys/fs/cgroup:/sys/fs/cgroup:ro
+   volumes:
+     - /sys/fs/cgroup:/sys/fs/cgroup:ro
+     - ${MOLECULE_PROJECT_DIRECTORY}/.molecule/ansible-tmp:/var/tmp/.ansible:rw,size=100M,mode=1777
     cgroupns_mode: host
     tmpfs:
       - /run
