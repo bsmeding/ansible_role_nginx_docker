@@ -11,6 +11,16 @@
     nginx__remove_existing_container: false
     nginx__remove_existing_home_dir: false
   pre_tasks:
+    - name: Ensure remote tmp dir exists
+      ansible.builtin.file:
+        path: /var/tmp/.ansible
+        state: directory
+        mode: '1777'
+      changed_when: false
+
+    - name: Gather facts
+      ansible.builtin.setup:
+
     - name: Update apt cache
       ansible.builtin.apt:
         update_cache: true
