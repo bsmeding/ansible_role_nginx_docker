@@ -2,6 +2,7 @@
 - name: Converge Nginx Docker
   hosts: all
   become: true
+  gather_facts: false
   vars:
     nginx__port_http: 8080
     nginx__port_https: 8443
