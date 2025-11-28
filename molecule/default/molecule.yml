@@ -18,6 +18,7 @@ platforms:
     tmpfs:
       - /run
       - /run/lock
+      - /tmp
     environment:
       container: docker
     privileged: true
