@@ -14,7 +14,6 @@ platforms:
     command: ${MOLECULE_DOCKER_COMMAND:-"/sbin/init"}
     volumes:
       - /sys/fs/cgroup:/sys/fs/cgroup:ro
-      - ${MOLECULE_PROJECT_DIRECTORY}/.molecule/ansible-tmp:/var/tmp/.ansible
     cgroupns_mode: host
     tmpfs:
       - /run
