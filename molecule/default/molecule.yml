@@ -14,7 +14,6 @@ platforms:
     command: ${MOLECULE_DOCKER_COMMAND:-"/sbin/init"}
     volumes:
       - /sys/fs/cgroup:/sys/fs/cgroup:ro
-      # - /var/run/docker.sock:/var/run/docker.sock
     cgroupns_mode: host
     tmpfs:
       - /run
