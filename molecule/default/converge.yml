@@ -9,8 +9,6 @@
     nginx__network_cidr: '172.16.23.0/24'
     nginx__remove_existing_container: false
     nginx__remove_existing_home_dir: false
-    # Skip Docker service management in test environment
-    docker_service_manage: false
   pre_tasks:
     - name: Update apt cache
       ansible.builtin.apt:
