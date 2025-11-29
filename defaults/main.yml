@@ -33,6 +33,22 @@ nginx__directories:
     mode: "0770"
     owner: "{{ docker_uid | default(1040) }}"
     group: "{{ docker_gid | default(1001) }}"
+  - path: "{{ nginx__home }}/config/nginx"
+    mode: "0770"
+    owner: "{{ docker_uid | default(1040) }}"
+    group: "{{ docker_gid | default(1001) }}"
+  - path: "{{ nginx__home }}/config/nginx/site-confs"
+    mode: "0770"
+    owner: "{{ docker_uid | default(1040) }}"
+    group: "{{ docker_gid | default(1001) }}"
+  - path: "{{ nginx__home }}/config/keys"
+    mode: "0770"
+    owner: "{{ docker_uid | default(1040) }}"
+    group: "{{ docker_gid | default(1001) }}"
+  - path: "/var/www"
+    mode: "0770"
+    owner: "{{ docker_uid | default(1040) }}"
+    group: "{{ docker_gid | default(1001) }}"
 nginx__ports:
   - "{{ nginx__port_http }}:80"
   - "{{ nginx__port_https }}:443"
@@ -40,9 +56,9 @@ nginx__directory_volumes:
   - "{{ nginx__home }}/config:/config"
   - "/var/www:/var/www"
 nginx__default_env:
-  TZ: "{{ container_time_zone | default('Europe/Paris') }}"
-  PUID: "{{ docker_uid | default(1040) }}"
-  PGID: "{{ docker_gid | default(1001) }}"
+  TZ: "{{ (container_time_zone | default('Europe/Paris')) | string }}"
+  PUID: "{{ (docker_uid | default(1040)) | string }}"
+  PGID: "{{ (docker_gid | default(1001)) | string }}"
 nginx__env: {}
 nginx__proxy_confs_subdomain: []
   # - server_name: dash.example.com

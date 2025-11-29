@@ -10,6 +10,7 @@
     owner: "{{ docker_uid | default('root') }}"
     group: "{{ docker_gid | default('root') }}"
     mode: '0660'
+    force: false
   failed_when: false
   notify: restart nginx
 
@@ -20,6 +21,7 @@
     owner: "{{ item.owner | default(docker_uid) | default('root') }}"  # First docker user (if docker role has run), otherwise default role, otherwise root
     group: "{{ item.group | default(docker_gid) | default('root') }}"
     mode: '0660'
+    force: false
   when: nginx__add_authelia_config|bool
   notify: restart nginx
 
@@ -30,6 +32,7 @@
     owner: "{{ item.owner | default(docker_uid) | default('root') }}"  # First docker user (if docker role has run), otherwise default role, otherwise root
     group: "{{ item.group | default(docker_gid) | default('root') }}"
     mode: '0660'
+    force: false
   when: nginx__add_authelia_config|bool
   notify: restart nginx
 
@@ -40,6 +43,7 @@
     owner: "{{ item.owner | default(docker_uid) | default('root') }}"  # First docker user (if docker role has run), otherwise default role, otherwise root
     group: "{{ item.group | default(docker_gid) | default('root') }}"
     mode: '0660'
+    force: false
   when: nginx__add_authelia_config|bool
   notify: restart nginx
 
@@ -50,6 +54,7 @@
     owner: "{{ docker_uid | default('root') }}"
     group: "{{ docker_gid | default('root') }}"
     mode: '0660'
+    force: false
   ignore_errors: true
   loop: "{{ nginx__proxy_confs_subdomain }}"
   no_log: "{{ nginx__hide_sensitive_logs }}"
@@ -65,6 +70,7 @@
     owner: "{{ docker_uid | default('root') }}"
     group: "{{ docker_gid | default('root') }}"
     mode: '0640'
+    force: false
   ignore_errors: true
   loop: "{{ nginx__proxy_confs_subdomain }}"
   no_log: "{{ nginx__hide_sensitive_logs }}"
@@ -80,6 +86,7 @@
     owner: "{{ docker_uid | default('root') }}"
     group: "{{ docker_gid | default('root') }}"
     mode: '0640'
+    force: false
   loop: "{{ nginx__proxy_confs_subdomain }}"
   no_log: "{{ nginx__hide_sensitive_logs }}"
   notify: restart nginx
@@ -92,6 +99,7 @@
     dest: "{{ nginx__home }}/config/nginx/site-confs/{{ item.server_name }}.conf"
     owner: "{{ item.owner | default(docker_uid) | default('root') }}"
     group: "{{ item.group | default(docker_gid) | default('root') }}"
+    force: false
   loop: "{{ nginx__proxy_confs_subdomain }}"
   notify: restart nginx
   when: nginx__proxy_confs_subdomain is defined and nginx__proxy_confs_subdomain|length>0
@@ -108,6 +116,7 @@
     owner: "{{ docker_uid }}"
     group: "{{ docker_gid }}"
     mode: '0640'
+    force: false
   when: site_confs_dir.stat.exists and site_confs_dir.stat.isdir
   notify: restart nginx
 
@@ -123,6 +132,7 @@
     owner: "{{ docker_uid }}"
     group: "{{ docker_gid }}"
     mode: '0640'
+    force: false
   when: host_site_confs_dir.stat.exists and host_site_confs_dir.stat.isdir
   notify: restart nginx
 
@@ -138,6 +148,7 @@
     owner: "{{ docker_uid }}"
     group: "{{ docker_gid }}"
     mode: '0740'
+    force: false
   when: sites_dir.stat.exists and sites_dir.stat.isdir
   notify: restart nginx
 
@@ -153,5 +164,6 @@
     owner: "{{ docker_uid }}"
     group: "{{ docker_gid }}"
     mode: '0740'
+    force: false
   when: host_sites_dir.stat.exists and host_sites_dir.stat.isdir
   notify: restart nginx
