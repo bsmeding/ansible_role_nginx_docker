@@ -31,4 +31,3 @@
       delay: 2
       until: nginx_http.status == 200
       changed_when: false
-
