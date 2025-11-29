@@ -1,0 +1,34 @@
+---
+- name: Verify Nginx Docker role
+  hosts: all
+  become: true
+  vars_files:
+    - ../../defaults/main.yml
+  tasks:
+    - name: Gather container info
+      community.docker.docker_container_info:
+        name: "{{ nginx__name }}"
+      register: nginx_container
+      failed_when: false
+
+    - name: Ensure container exists
+      ansible.builtin.fail:
+        msg: "Container {{ nginx__name }} not found"
+      when: nginx_container.container is not defined
+
+    - name: Assert container is running
+      ansible.builtin.assert:
+        that:
+          - nginx_container.container.State.Running | default(false)
+        fail_msg: "Container {{ nginx__name }} is not running"
+
+    - name: Check HTTP endpoint responds
+      ansible.builtin.uri:
+        url: "http://localhost:{{ nginx__port_http }}"
+        status_code: 200
+      register: nginx_http
+      retries: 5
+      delay: 2
+      until: nginx_http.status == 200
+      changed_when: false
+
