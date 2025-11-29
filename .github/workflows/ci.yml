@@ -57,7 +57,7 @@ jobs:
           python-version: '3.13'  # .14 and up not supported by Ansible
 
       - name: Install test dependencies.
-        run: pip3 install ansible molecule molecule-plugins[docker] docker
+        run: pip3 install ansible molecule molecule-plugins[docker] docker netaddr
 
       - name: Pull CICD image
         run: docker pull bsmeding/ansible_cicd_${{ matrix.distro }}:latest
