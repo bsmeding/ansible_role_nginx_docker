@@ -4,9 +4,9 @@ name: CI
   pull_request:
   push:
     branches:
-      - main
+      - master
   schedule:
-    - cron: "0 7 * * 0"
+    - cron: "0 6 * * 3"
 
 defaults:
   run:
@@ -19,14 +19,14 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Check out the codebase.
-        uses: actions/checkout@v5
+        uses: actions/checkout@v4
         with:
           path: 'bsmeding.nginx_docker'
 
       - name: Set up Python 3.
         uses: actions/setup-python@v5
         with:
-          python-version: '3.13' # 3.x installad 3.14 and that is not supported by Ansible
+          python-version: '3.13'  # 3.x installad 3.14 and that is not supported by Ansible
 
       - name: Install test dependencies.
         run: pip3 install yamllint
@@ -41,31 +41,23 @@ jobs:
     strategy:
       matrix:
         distro:
-          # - debian11
-          # - debian12
+          - rockylinux9
           - ubuntu2204
-          # - rockylinux8
-          # - rockylinux9
-          # - fedora42
+          - debian12
 
     steps:
       - name: Check out the codebase.
-        uses: actions/checkout@v5
+        uses: actions/checkout@v4
         with:
-          path: 'bsmeding.nginx_docker'
+          path: 'geerlingguy.nginx'
 
       - name: Set up Python 3.
         uses: actions/setup-python@v5
         with:
-          python-version: '3.13' # 3.x installad 3.14 and that is not supported by Ansible
-
-      - name: Install uv
-        run: |
-          curl -LsSf https://astral.sh/uv/install.sh | sh
-          echo "$HOME/.cargo/bin" >> $GITHUB_PATH
+          python-version: '3.13'  # .14 and up not supported by Ansible
 
       - name: Install test dependencies.
-        run: uv pip install --system ansible-core==2.20.0 molecule molecule-plugins[docker] docker netaddr requests
+        run: pip3 install ansible molecule molecule-plugins[docker] docker
 
       - name: Run Molecule tests.
         run: molecule test
@@ -73,4 +65,3 @@ jobs:
           PY_COLORS: '1'
           ANSIBLE_FORCE_COLOR: '1'
           MOLECULE_DISTRO: ${{ matrix.distro }}
-          MOLECULE_DOCKER_COMMAND: '/lib/systemd/systemd'
