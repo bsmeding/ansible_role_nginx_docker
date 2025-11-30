@@ -5,6 +5,14 @@
   vars_files:
     - ../../defaults/main.yml
   tasks:
+    - name: Wait for Nginx HTTP port
+      ansible.builtin.wait_for:
+        host: 127.0.0.1
+        port: "{{ nginx__port_http }}"
+        delay: 5
+        timeout: 120
+      changed_when: false
+
     - name: Gather container info
       community.docker.docker_container_info:
         name: "{{ nginx__name }}"
@@ -27,7 +35,7 @@
         url: "http://localhost:{{ nginx__port_http }}"
         status_code: 200
       register: nginx_http
-      retries: 5
-      delay: 2
+      retries: 20
+      delay: 3
       until: nginx_http.status == 200
       changed_when: false
