@@ -7,6 +7,9 @@
     nginx_remove_default_vhost: true
     nginx__port_http: 8080
     nginx__port_https: 8443
+    nginx__ports:
+      - "{{ nginx__port_http }}:80"
+      - "{{ nginx__port_https }}:443"
     nginx_vhosts:
       - server_name: "test.dev"
         root: "/var/www/test"

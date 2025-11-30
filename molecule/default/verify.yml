@@ -5,12 +5,18 @@
   vars_files:
     - ../../defaults/main.yml
   tasks:
-    - name: Wait for Nginx HTTP port
-      ansible.builtin.wait_for:
-        host: 127.0.0.1
-        port: "{{ nginx__port_http }}"
-        delay: 5
-        timeout: 120
+    - name: Set molecule testing ports
+      ansible.builtin.set_fact:
+        nginx__port_http: 8080
+        nginx__port_https: 8443
+
+    - name: "Wait for Nginx HTTP port {{ nginx__port_http }} to come active"
+      ansible.builtin.command: >
+        docker exec {{ nginx__name }} curl -fsS http://127.0.0.1:80
+      register: nginx_http_ready
+      retries: 40
+      delay: 3
+      until: nginx_http_ready.rc == 0
       changed_when: false
 
     - name: Gather container info
@@ -31,11 +37,10 @@
         fail_msg: "Container {{ nginx__name }} is not running"
 
     - name: Check HTTP endpoint responds
-      ansible.builtin.uri:
-        url: "http://localhost:{{ nginx__port_http }}"
-        status_code: 200
+      ansible.builtin.command: >
+        docker exec {{ nginx__name }} curl -fsS -o /dev/null http://127.0.0.1:80
       register: nginx_http
       retries: 20
       delay: 3
-      until: nginx_http.status == 200
+      until: nginx_http.rc == 0
       changed_when: false

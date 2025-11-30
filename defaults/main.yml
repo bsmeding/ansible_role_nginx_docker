@@ -11,6 +11,7 @@ nginx__remove_existing_container: false
 nginx__remove_existing_home_dir: false  # ONLY FOR AUTOMATED TEST!! WILL REMOVE ALL DATA!!!!
 nginx__pull_image: true
 nginx__file_volumes: []
+nginx__network: 'proxy'
 nginx__network_mode: 'bridge'
 nginx__network_cidr: '172.16.22.0/24'
 nginx__disable_http_to_https_redirect: false
@@ -18,7 +19,6 @@ nginx__local_certs_path: ''
 nginx__add_authelia_config: false
 nginx__authelia_upstream_host: authelia
 nginx__authelia_upstream_port: 9091
-nginx__network: 'proxy'
 nginx__container_networks:
   - name: bridge
   - name: "{{ nginx__network }}"
@@ -52,6 +52,7 @@ nginx__directories:
 nginx__ports:
   - "{{ nginx__port_http }}:80"
   - "{{ nginx__port_https }}:443"
+
 nginx__directory_volumes:
   - "{{ nginx__home }}/config:/config"
   - "/var/www:/var/www"
