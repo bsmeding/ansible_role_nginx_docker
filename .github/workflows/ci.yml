@@ -64,6 +64,11 @@ jobs:
       - name: Pull CICD image
         run: docker pull bsmeding/ansible_cicd_${{ matrix.distro }}:latest
 
+      - name: Prep Molecule tmp dir
+        run: |
+          mkdir -p .molecule/ansible-tmp
+          chmod 777 .molecule/ansible-tmp
+
       - name: Run Molecule tests
         run: molecule test
         env:
