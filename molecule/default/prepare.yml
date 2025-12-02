@@ -1,12 +1,26 @@
 ---
-- name: Prepare Molecule host tmp dir
+- name: Prepare Molecule host paths
   hosts: localhost
   gather_facts: false
   vars:
     molecule_tmp_dir: "{{ lookup('env', 'MOLECULE_PROJECT_DIRECTORY') | default(playbook_dir ~ '/..', true) }}/.molecule/ansible-tmp"
+    molecule_nginx_home: "{{ lookup('env', 'MOLECULE_EPHEMERAL_DIRECTORY') | default('/tmp/molecule', true) }}/nginx"
+    molecule_nginx_directories:
+      - config
+      - config/nginx
+      - config/nginx/site-confs
+      - config/keys
+      - www
   tasks:
     - name: Ensure Molecule tmp dir exists
       ansible.builtin.file:
         path: "{{ molecule_tmp_dir }}"
         state: directory
         mode: "0777"
+
+    - name: Ensure Molecule nginx directories exist
+      ansible.builtin.file:
+        path: "{{ molecule_nginx_home }}/{{ item }}"
+        state: directory
+        mode: "0777"
+      loop: "{{ molecule_nginx_directories }}"
