@@ -7,6 +7,7 @@
     molecule_nginx_home: "{{ lookup('env', 'MOLECULE_PROJECT_DIRECTORY') }}/.molecule/nginx"
     molecule_nginx_directories:
       - config
+      - config/.ansible
       - config/nginx
       - config/nginx/site-confs
       - config/keys

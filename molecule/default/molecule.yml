@@ -28,4 +28,4 @@ provisioner:
     verify: ${MOLECULE_PLAYBOOK_VERIFY:-verify.yml}
   config_options:
     defaults:
-      remote_tmp: /tmp/.ansible
+      remote_tmp: /config/.ansible
