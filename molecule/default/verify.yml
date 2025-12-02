@@ -2,22 +2,13 @@
 - name: Verify Nginx Docker role
   hosts: all
   become: true
-  vars:
-    molecule_nginx_home: "{{ lookup('env', 'MOLECULE_PROJECT_DIRECTORY') }}/.molecule/nginx"
-    molecule_nginx_http_port: 18080
-    molecule_nginx_https_port: 18443
   vars_files:
     - ../../defaults/main.yml
   tasks:
     - name: Set molecule testing ports
       ansible.builtin.set_fact:
-        nginx__home: "{{ molecule_nginx_home }}"
-        nginx__port_http: "{{ molecule_nginx_http_port }}"
-        nginx__port_https: "{{ molecule_nginx_https_port }}"
-        nginx__directory_volumes:
-          - "{{ molecule_nginx_home }}/config:/config"
-          - "{{ molecule_nginx_home }}/www:/var/www"
-        nginx__file_volumes: []
+        nginx__port_http: 8080
+        nginx__port_https: 8443
 
     - name: "Wait for Nginx HTTP port {{ nginx__port_http }} to come active"
       ansible.builtin.command: >
