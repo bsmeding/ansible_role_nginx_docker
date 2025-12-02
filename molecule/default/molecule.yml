@@ -13,7 +13,7 @@ platforms:
     volumes:
       - /sys/fs/cgroup:/sys/fs/cgroup:rw
       - /var/run/docker.sock:/var/run/docker.sock
-      - ${MOLECULE_PROJECT_DIRECTORY}/.molecule/ansible-tmp:/root/.ansible/tmp
+      - ${MOLECULE_PROJECT_DIRECTORY}/.molecule/ansible-tmp:/tmp/.ansible
     tmpfs:
       - /run
       - /run/lock
@@ -26,8 +26,9 @@ provisioner:
   name: ansible
   playbooks:
     prepare: ${MOLECULE_PLAYBOOK_PREPARE:-prepare.yml}
+    create: ${MOLECULE_PLAYBOOK_CREATE:-create.yml}
     converge: ${MOLECULE_PLAYBOOK:-converge.yml}
     verify: ${MOLECULE_PLAYBOOK_VERIFY:-verify.yml}
   config_options:
     defaults:
-      remote_tmp: /root/.ansible/tmp
+      remote_tmp: /tmp/.ansible

@@ -1,11 +1,11 @@
 ---
-- name: Prepare Molecule host tmp dir
+- name: Create Molecule instance
   hosts: localhost
   gather_facts: false
   vars:
     molecule_tmp_dir: "{{ lookup('env', 'MOLECULE_PROJECT_DIRECTORY') | default(playbook_dir ~ '/..', true) }}/.molecule/ansible-tmp"
   tasks:
-    - name: Ensure Molecule tmp dir exists
+    - name: Ensure Molecule tmp dir exists for create phase
       ansible.builtin.file:
         path: "{{ molecule_tmp_dir }}"
         state: directory
