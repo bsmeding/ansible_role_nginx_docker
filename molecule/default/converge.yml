@@ -3,7 +3,7 @@
   hosts: all
 
   vars:
-    molecule_nginx_home: "{{ lookup('env', 'MOLECULE_EPHEMERAL_DIRECTORY') | default('/tmp/molecule', true) }}/nginx"
+    molecule_nginx_home: "{{ lookup('env', 'MOLECULE_PROJECT_DIRECTORY') }}/.molecule/nginx"
     nginx_use_ppa: true
     nginx_remove_default_vhost: true
     nginx__port_http: 18080

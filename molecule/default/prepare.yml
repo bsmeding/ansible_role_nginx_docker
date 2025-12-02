@@ -4,7 +4,7 @@
   gather_facts: false
   vars:
     molecule_tmp_dir: "{{ lookup('env', 'MOLECULE_PROJECT_DIRECTORY') | default(playbook_dir ~ '/..', true) }}/.molecule/ansible-tmp"
-    molecule_nginx_home: "{{ lookup('env', 'MOLECULE_EPHEMERAL_DIRECTORY') | default('/tmp/molecule', true) }}/nginx"
+    molecule_nginx_home: "{{ lookup('env', 'MOLECULE_PROJECT_DIRECTORY') }}/.molecule/nginx"
     molecule_nginx_directories:
       - config
       - config/nginx
