@@ -1,7 +1,7 @@
 ---
 - name: Converge
   hosts: all
-  gather_facts: false
+  gather_facts: true
 
   vars:
     molecule_nginx_home: "{{ lookup('env', 'MOLECULE_PROJECT_DIRECTORY') }}/.molecule/nginx"
@@ -17,12 +17,6 @@
         root: "/var/www/test"
 
   pre_tasks:
-    - name: Ensure remote tmp exists on instance
-      ansible.builtin.raw: mkdir -p /tmp/.ansible && chmod 0777 /tmp/.ansible
-
-    - name: Gather facts
-      ansible.builtin.setup:
-
     - name: Override nginx paths for Molecule workspace
       ansible.builtin.set_fact:
         nginx__home: "{{ molecule_nginx_home }}"
