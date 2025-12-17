@@ -1,4 +1,3 @@
 ---
 os_packages:
   - name: py3-docker
-

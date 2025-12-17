@@ -1,4 +1,3 @@
 ---
 os_packages:
   - name: python-docker
-
