@@ -19,46 +19,71 @@
     - ansible_distribution != 'Fedora'
   become: true
 
-- name: Install OS packages for Docker support
+- name: Install OS packages for Docker support (Debian/Ubuntu and RHEL 8)
   ansible.builtin.package:
     name: "{{ item.name }}"
     state: present
   with_items: "{{ os_packages }}"
-  when: os_packages is defined and os_packages | length > 0
+  when:
+    - os_packages is defined and os_packages | length > 0
+    - not (ansible_facts['os_family'] == 'RedHat' and ansible_facts['distribution_major_version'] | int >= 9)
   become: true
 
-- name: Ensure pip3 is installed (for docker library upgrade)
+- name: Ensure pip3 is installed
   ansible.builtin.package:
     name: python3-pip
     state: present
   become: true
 
-- name: Upgrade docker Python library to latest version (compatibility with community.docker)
+- name: Upgrade pip to latest version
+  ansible.builtin.pip:
+    name: pip
+    state: latest
+    executable: pip3
+    extra_args: "{{ nginx__pip_packages_extra_args | default(omit) }}"
+  ignore_errors: true
+  become: true
+
+- name: Install docker Python library via pip (RHEL 9+ - EPEL version too old)
   block:
-    - name: Upgrade pip to latest version
-      ansible.builtin.pip:
-        name: pip
-        state: latest
-        executable: pip3
-        extra_args: "{{ nginx__pip_packages_extra_args | default(omit) }}"
-      ignore_errors: true
-
-    - name: Upgrade docker library (try with break-system-packages for RHEL 9+)
+    - name: Install docker library via pip (try with break-system-packages for RHEL 9+)
       ansible.builtin.pip:
         name: docker
         state: latest
         executable: pip3
-        extra_args: "{{ ('--break-system-packages ' + nginx__pip_packages_extra_args) if (ansible_facts['distribution_major_version'] | int >= 9 and nginx__pip_packages_extra_args) else ('--break-system-packages' if ansible_facts['distribution_major_version'] | int >= 9 else (nginx__pip_packages_extra_args | default(omit))) }}"
-      register: pip_upgrade_break
+        extra_args: "{{ ('--break-system-packages --upgrade-strategy only-if-needed ' + nginx__pip_packages_extra_args) if nginx__pip_packages_extra_args else '--break-system-packages --upgrade-strategy only-if-needed' }}"
+      register: pip_install_break
       ignore_errors: true
 
-    - name: Upgrade docker library (fallback without flag)
+    - name: Install docker library via pip (fallback without break-system-packages for RHEL 9+)
       ansible.builtin.pip:
         name: docker
         state: latest
         executable: pip3
-        extra_args: "{{ nginx__pip_packages_extra_args | default(omit) }}"
-      when: pip_upgrade_break is failed
+        extra_args: "{{ ('--upgrade-strategy only-if-needed ' + nginx__pip_packages_extra_args) if nginx__pip_packages_extra_args else '--upgrade-strategy only-if-needed' }}"
+      register: pip_install_fallback
+      ignore_errors: true
+      when: pip_install_break is failed
+
+    - name: Install docker library via pip (final fallback - ignore installed requests)
+      ansible.builtin.pip:
+        name: docker
+        state: latest
+        executable: pip3
+        extra_args: "{{ ('--break-system-packages --ignore-installed requests ' + nginx__pip_packages_extra_args) if nginx__pip_packages_extra_args else '--break-system-packages --ignore-installed requests' }}"
+      when:
+        - pip_install_break is failed
+        - pip_install_fallback is failed
+  when: ansible_facts['os_family'] == 'RedHat' and ansible_facts['distribution_major_version'] | int >= 9
+  become: true
+
+- name: Upgrade docker library via pip (for RHEL 8 and Debian/Ubuntu - upgrade OS package version)
+  ansible.builtin.pip:
+    name: docker
+    state: latest
+    executable: pip3
+    extra_args: "{{ nginx__pip_packages_extra_args | default(omit) }}"
+  when: ansible_facts['distribution_major_version'] | int < 9 or ansible_facts['os_family'] != 'RedHat'
   become: true
 
 - name: Remove existing {{ nginx__name }} container
