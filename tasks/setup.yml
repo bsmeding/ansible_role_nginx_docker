@@ -27,6 +27,40 @@
   when: os_packages is defined and os_packages | length > 0
   become: true
 
+- name: Ensure pip3 is installed (for docker library upgrade)
+  ansible.builtin.package:
+    name: python3-pip
+    state: present
+  become: true
+
+- name: Upgrade docker Python library to latest version (compatibility with community.docker)
+  block:
+    - name: Upgrade pip to latest version
+      ansible.builtin.pip:
+        name: pip
+        state: latest
+        executable: pip3
+        extra_args: "{{ nginx__pip_packages_extra_args | default(omit) }}"
+      ignore_errors: true
+
+    - name: Upgrade docker library (try with break-system-packages for RHEL 9+)
+      ansible.builtin.pip:
+        name: docker
+        state: latest
+        executable: pip3
+        extra_args: "{{ ('--break-system-packages ' + nginx__pip_packages_extra_args) if (ansible_facts['distribution_major_version'] | int >= 9 and nginx__pip_packages_extra_args) else ('--break-system-packages' if ansible_facts['distribution_major_version'] | int >= 9 else (nginx__pip_packages_extra_args | default(omit))) }}"
+      register: pip_upgrade_break
+      ignore_errors: true
+
+    - name: Upgrade docker library (fallback without flag)
+      ansible.builtin.pip:
+        name: docker
+        state: latest
+        executable: pip3
+        extra_args: "{{ nginx__pip_packages_extra_args | default(omit) }}"
+      when: pip_upgrade_break is failed
+  become: true
+
 - name: Remove existing {{ nginx__name }} container
   docker_container:
     name: "{{ nginx__name }}"
