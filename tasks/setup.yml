@@ -10,6 +10,15 @@
       paths:
         - 'vars'
 
+- name: Ensure EPEL GPG key is present (RHEL)
+  ansible.builtin.rpm_key:
+    key: "https://dl.fedoraproject.org/pub/epel/RPM-GPG-KEY-EPEL-{{ ansible_distribution_major_version }}"
+    state: present
+  when:
+    - ansible_facts['os_family'] == 'RedHat'
+    - ansible_distribution != 'Fedora'
+  become: true
+
 - name: Install OS packages for Docker support
   ansible.builtin.package:
     name: "{{ item.name }}"
