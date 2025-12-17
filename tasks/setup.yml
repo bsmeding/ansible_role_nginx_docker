@@ -1,25 +1,22 @@
 ---
-# - name: Include OS-specific vars
-#   include_vars: "{{ ansible_os_family }}.yml"
+- name: Load OS-specific vars
+  ansible.builtin.include_vars: "{{ lookup('first_found', params) }}"
+  vars:
+    params:
+      files:
+        - '{{ ansible_facts["distribution"] }}.yml'
+        - '{{ ansible_facts["os_family"] }}.yml'
+        - main.yml
+      paths:
+        - 'vars'
 
-# - name: Install packages for OS
-#   ansible.builtin.package:
-#     name={{ item.name }}
-#     version={{ item.version | default(omit) }}
-#   with_items: "{{ os_packages }}"
-#   become: true
-#   when: os_packages is defined
-
-# - name: Install  pip packages
-#   ansible.builtin.pip:
-#     name: "{{ item }}"
-#     state: forcereinstall
-#     executable: pip3
-#     extra_args: "{{ nginx__pip_packages_extra_args }}"
-#     umask: "0022"
-#   changed_when: false
-#   with_items: "{{ python_packages }}"
-#   when: python_packages is defined
+- name: Install OS packages for Docker support
+  ansible.builtin.package:
+    name: "{{ item.name }}"
+    state: present
+  with_items: "{{ os_packages }}"
+  when: os_packages is defined and os_packages | length > 0
+  become: true
 
 - name: Remove existing {{ nginx__name }} container
   docker_container:
