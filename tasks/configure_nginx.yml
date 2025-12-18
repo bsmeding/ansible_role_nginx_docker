@@ -103,6 +103,7 @@
   loop: "{{ nginx__proxy_confs_subdomain }}"
   notify: restart nginx
   when: nginx__proxy_confs_subdomain is defined and nginx__proxy_confs_subdomain|length>0
+  no_log: "{{ nginx__hide_sensitive_logs }}"
 
 - name: Check if site-confs directory exists
   ansible.builtin.stat:
