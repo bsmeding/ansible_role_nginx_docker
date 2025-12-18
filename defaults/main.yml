@@ -6,6 +6,7 @@ nginx__port_http: 80
 nginx__port_https: 443
 nginx__trusted_proxy_cidrs: []
 nginx__skip_setup: false  # When true, setup is skipped and only config tasks are executed
+nginx__install_python_docker: false  # Install python3-docker OS package (default false, docker role usually installs it)
 nginx__pip_packages_extra_args: ''  # Example: '--user --upgrade --break-system-packages'
 nginx__remove_existing_container: false
 nginx__remove_existing_home_dir: false  # ONLY FOR AUTOMATED TEST!! WILL REMOVE ALL DATA!!!!

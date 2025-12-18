@@ -17,6 +17,7 @@
   when:
     - ansible_facts['os_family'] == 'RedHat'
     - ansible_distribution != 'Fedora'
+    - nginx__install_python_docker | bool
   become: true
 
 - name: Install OS packages for Docker support
@@ -24,7 +25,9 @@
     name: "{{ item.name }}"
     state: present
   with_items: "{{ os_packages }}"
-  when: os_packages is defined and os_packages | length > 0
+  when:
+    - nginx__install_python_docker | bool
+    - os_packages is defined and os_packages | length > 0
   become: true
 
 - name: Remove existing {{ nginx__name }} container
